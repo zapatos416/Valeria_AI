@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🔑 TU API KEY DE GROQ
     const GROQ_API_KEY = "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";
 
-    // Historial limpio y estable para el chat
+    // Historial limpio
     let historialChat = [
         {
             role: "system",
@@ -28,12 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const texto = userInput.value.trim();
         if (!texto) return;
 
-        // Mostrar mensaje del usuario en pantalla
         agregarMensajeAlDOM(texto, 'user');
         userInput.value = '';
         mostrarEscribiendo(true);
 
-        // Agregar al historial de la conversación
         historialChat.push({ role: "user", content: texto });
 
         try {
@@ -70,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Funciones auxiliares de la interfaz
     function agregarMensajeAlDOM(texto, remitente) {
         const div = document.createElement('div');
         div.className = `message ${remitente}`;
@@ -88,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Eventos
     if (sendButton) {
         sendButton.addEventListener('click', enviarMensaje);
     }
@@ -101,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Emojis
     if (emojiToggleBtn && emojiPicker) {
         emojiToggleBtn.addEventListener('click', () => {
             emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
