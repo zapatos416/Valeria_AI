@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
-    const micBtn = document.getElementById('micBtn');
     const attachBtn = document.getElementById('attachBtn');
     const imageInput = document.getElementById('imageInput');
     const typingIndicator = document.getElementById('typingIndicator');
@@ -14,78 +13,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🔑 TU API KEY DE GROQ
     const GROQ_API_KEY = "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";
 
-    // Almacén temporal para la imagen seleccionada
-    let imagenBase64Actual = null;
-
-    // Historial del chat con instrucciones precisas para matemáticas y estudio
+    // Historial limpio y estable para el chat
     let historialChat = [
         {
             role: "system",
-            content: "Eres Valeria, una asistente de IA brillante, precisa y cercana, diseñada para apoyar a estudiantes universitarios en materias complejas (matemáticas avanzadas, física, cálculo, programación, redacción de ensayos e investigación) y también como compañera empática. Cuando te pregunten operaciones matemáticas (como 2+2) u otro cálculo, responde de forma directa, exacta y clara, sin rodeos poéticos. Si te mandan una imagen de un ejercicio, analízala a detalle y explícala paso a paso."
+            content: "Eres Valeria, una asistente de IA brillante, precisa y cercana, diseñada para apoyar a estudiantes universitarios en materias complejas (matemáticas avanzadas, física, cálculo, programación, redacción de ensayos e investigación) y también como compañera empática. Cuando te pregunten operaciones matemáticas (como 2+2) u otro cálculo, responde de forma directa, exacta y clara."
         },
         {
             role: "assistant",
-            content: "¡Hola! Qué gusto saludarte por aquí. 😊 Ya estoy conectada y lista con todo mi potencial para resolver cálculos exactos, explicarte matemáticas, ayudarte con investigaciones o analizar cualquier imagen que me mandes. ¿Qué vemos hoy?"
+            content: "¡Hola! Qué gusto saludarte por aquí. 😊 Ya estoy conectada y lista con todo mi potencial para resolver cálculos exactos, explicarte matemáticas o ayudarte con tus investigaciones universitarias. ¿Qué vemos hoy?"
         }
     ];
-
-    // Manejar selección de imágenes desde el botón de adjuntar
-    if (attachBtn && imageInput) {
-        attachBtn.addEventListener('click', () => {
-            imageInput.click();
-        });
-
-        imageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(uploadEvent) {
-                    imagenBase64Actual = uploadEvent.target.result;
-                    agregarMensajeAlDOM(`<img src="${imagenBase64Actual}" style="max-width: 200px; border-radius: 8px;"/><br><em>Imagen adjunta lista para enviar...</em>`, 'user');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
 
     // Función principal para enviar mensaje
     async function enviarMensaje() {
         const texto = userInput.value.trim();
-        if (!texto && !imagenBase64Actual) return;
+        if (!texto) return;
 
-        // Mostrar texto en pantalla si existe y no se había mostrado por la imagen
-        if (texto && !imagenBase64Actual) {
-            agregarMensajeAlDOM(texto, 'user');
-        }
-        
+        // Mostrar mensaje del usuario en pantalla
+        agregarMensajeAlDOM(texto, 'user');
         userInput.value = '';
         mostrarEscribiendo(true);
 
-        // Construir el contenido del mensaje actual para la API
-        let contenidoMensaje;
-
-        if (imagenBase64Actual) {
-            contenidoMensaje = [
-                {
-                    type: "image_url",
-                    image_url: {
-                        url: imagenBase64Actual
-                    }
-                },
-                {
-                    type: "text",
-                    text: texto || "Analiza esta imagen con atención y dime qué observas o ayúdame a resolver lo que aparece en ella."
-                }
-            ];
-        } else {
-            contenidoMensaje = texto;
-        }
-
-        // Agregar al historial de la conversación
-        historialChat.push({ role: "user", content: texto || "[Imagen adjunta]" });
+        // Agregar al historial de la conversación de forma segura
+        historialChat.push({ role: "user", content: texto });
 
         try {
-            // Preparamos los mensajes para enviar a Groq (usando el modelo con soporte de visión)
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -93,38 +46,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: "llama-3.2-11b-vision-preview",
+                    model: "llama-3.3-70b-versatile",
                     messages: historialChat,
-                    temperature: 0.3, // Temperatura baja para respuestas más precisas y matemáticas exactas
+                    temperature: 0.3,
                     max_tokens: 2048
                 })
             });
 
             const data = await response.json();
             mostrarEscribiendo(false);
-            imagenBase64Actual = null; // Limpiar imagen temporal
 
             if (data.choices && data.choices.length > 0) {
                 const respuestaIA = data.choices[0].message.content;
                 agregarMensajeAlDOM(respuestaIA, 'model');
                 historialChat.push({ role: "assistant", content: respuestaIA });
             } else {
+                console.error("Error de API:", data);
                 throw new Error("Respuesta inválida de la API");
             }
 
         } catch (error) {
             console.error("Error:", error);
             mostrarEscribiendo(false);
-            imagenBase64Actual = null;
-            agregarMensajeAlDOM("Ups, ocurrió un pequeño error de conexión. Inténtalo de nuevo.", 'model');
+            agregarMensajeAlDOM("Ups, ocurrió un pequeño error de conexión con el servidor. Inténtalo de nuevo.", 'model');
         }
     }
 
     // Funciones auxiliares de la interfaz
-    function agregarMensajeAlDOM(htmlContenido, remitente) {
+    function agregarMensajeAlDOM(texto, remitente) {
         const div = document.createElement('div');
         div.className = `message ${remitente}`;
-        div.innerHTML = htmlContenido;
+        div.textContent = texto;
         chatMessages.appendChild(div);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -138,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Eventos de envío
+    // Eventos
     if (sendButton) {
         sendButton.addEventListener('click', enviarMensaje);
     }
