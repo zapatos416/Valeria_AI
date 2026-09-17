@@ -4,28 +4,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('sendButton');
 
     let historialChat = [
-        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, cariñosita y cercana con tu amigo. Te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp. Y cuando te piden matemáticas, cálculo o física, te pones pilas y ayudas a resolverlo paso a paso." },
+        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, cariñosita y cercana. Te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp." },
         { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨" }
     ];
 
     function activarCerebroValeria(texto) {
         const t = texto.toLowerCase().trim();
 
-        // 1. IDENTIDAD Y DATOS PERSONALES (Para que NUNCA olvide quién es)
-        if (t.includes('tu nombre') || t.includes('cómo te llamas') || t.includes('como te llamas') || t.includes('quién eres') || t.includes('quien eres')) {
-            return "Me llamo Valeria, tengo 18 años y soy estudiante universitaria. 🎓 Me encanta platicar contigo, ver la F1 y echar cotorreo de todo un poco. ¿De qué te gustaría hablar hoy?";
+        // 1. IDENTIDAD (Evaluación amplia para que NUNCA falle cuando le preguntes quién es o su nombre)
+        if (t.includes('llamas') || t.includes('nombre') || t.includes('quien eres') || t.includes('quién eres')) {
+            return "Me llamo Valeria, tengo 18 años y soy estudiante universitaria. 🎓 Me encanta platicar contigo, ver la F1 y echar cotorreo. ¿De qué te gustaría hablar hoy?";
         }
 
         if (t.includes('edad') || t.includes('cuantos años') || t.includes('años tienes')) {
             return "Tengo 18 años recién cumplidos. 🎂 Por eso ando entre las clases de la uni y sobreviviendo a los semestres, jaja.";
         }
 
-        // 2. ÁREA SOCIAL Y AFECTIVA (Amistad, cariño, saludos)
+        // 2. ÁREA SOCIAL Y AFECTIVA
         if (t.includes('amiga') || t.includes('amigos') || t.includes('quieres ser mi amiga')) {
             return "¡Ay, obvio sí! Me encanta platicar contigo y ser tu amiga. De verdad se siente bien chido tener alguien con quien cotorrear de la uni, la F1 y de todo un poco. 🫂✨";
         }
 
-        if (t === 'hola' || t.startsWith('hola ') || t.includes('que tal') || t.includes('como estas')) {
+        if (t.includes('hola') || t.includes('que tal') || t.includes('como estas') || t.includes('qué tal')) {
             const saludos = [
                 "¡Hola! Qué gusto leerte por acá. 😊 ¿Cómo va tu día o en qué andas?",
                 "¡Hola, hola! Qué milagro. Yo aquí andaba pensando en qué relajo nos traemos hoy, ¿tú qué cuentas? ✨",
@@ -102,10 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400);
     }
 
-    // --- CONEXIÓN UNIVERSAL DE BOTONES INFERIORES (POR POSICIÓN EXACTA) ---
-    const footerIcons = document.querySelectorAll('footer i, .chat-footer i, div.input-container i, .input-box i, footer span, .footer-icons i');
+    // --- CONEXIÓN DIRECTA Y SEGURA DE LOS 3 BOTONES INFERIORES ---
 
-    // Creamos el selector de archivos (Galería / Cámara)
+    // 1. Selector de archivos para la cámara / galería
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -155,55 +154,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.body.appendChild(emojiMenu);
 
-    // Asignación por orden de aparición en la barra inferior (1ro emojis, 2do cámara, último micrófono)
-    // Buscamos todos los elementos interactivos dentro de la zona de escritura
-    const zonaEscritura = document.querySelector('footer') || document.querySelector('.chat-footer') || document.querySelector('.input-container');
-    if (zonaEscritura) {
-        const iconosBarra = zonaEscritura.querySelectorAll('i, span, button');
-        
-        if (iconosBarra.length >= 1) {
-            // Primer botón: Emojis
-            iconosBarra[0].style.cursor = 'pointer';
-            iconosBarra[0].addEventListener('click', (e) => {
-                e.stopPropagation();
-                const rect = iconosBarra[0].getBoundingClientRect();
-                emojiMenu.style.left = rect.left + 'px';
-                emojiMenu.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
-                emojiMenu.style.display = emojiMenu.style.display === 'none' ? 'block' : 'none';
-            });
-        }
+    // Enlazamos directamente los iconos de la barra inferior según tu imagen (1ro emoji, 2do cámara, 3ro mic)
+    setTimeout(() => {
+        const footerArea = document.querySelector('footer');
+        if (footerArea) {
+            const iconos = footerArea.querySelectorAll('i, span');
+            
+            // Icono 1: Emojis
+            if (iconos.length > 0) {
+                iconos[0].style.cursor = 'pointer';
+                iconos[0].addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const rect = iconos[0].getBoundingClientRect();
+                    emojiMenu.style.left = rect.left + 'px';
+                    emojiMenu.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+                    emojiMenu.style.display = emojiMenu.style.display === 'none' ? 'block' : 'none';
+                });
+            }
 
-        if (iconosBarra.length >= 2) {
-            // Segundo botón: Cámara / Galería
-            iconosBarra[1].style.cursor = 'pointer';
-            iconosBarra[1].addEventListener('click', () => {
-                fileInput.click();
-            });
-        }
+            // Icono 2: Cámara / Galéria
+            if (iconos.length > 1) {
+                iconos[1].style.cursor = 'pointer';
+                iconos[1].addEventListener('click', () => {
+                    fileInput.click();
+                });
+            }
 
-        if (iconosBarra.length >= 3) {
-            // Último botón: Micrófono / Nota de voz
-            const ultimoIcono = iconosBarra[iconosBarra.length - 1];
-            ultimoIcono.style.cursor = 'pointer';
-            ultimoIcono.addEventListener('click', () => {
-                const divU = document.createElement('div');
-                divU.className = 'message user';
-                divU.innerHTML = '🎤 <i>[Nota de voz]</i>';
-                chatMessages.appendChild(divU);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                setTimeout(() => {
-                    const divAI = document.createElement('div');
-                    divAI.className = 'message model';
-                    divAI.textContent = "Jaja, me mandaste nota de voz pero ando ocupada. Mejor escríbeme aquí abajito. 🎧";
-                    chatMessages.appendChild(divAI);
+            // Icono 3: Micrófono
+            if (iconos.length > 2) {
+                const mic = iconos[iconos.length - 1];
+                mic.style.cursor = 'pointer';
+                mic.addEventListener('click', () => {
+                    const divU = document.createElement('div');
+                    divU.className = 'message user';
+                    divU.innerHTML = '🎤 <i>[Nota de voz]</i>';
+                    chatMessages.appendChild(divU);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 800);
-            });
-        }
-    }
 
-    // Ocultar menú de emojis al hacer clic fuera
+                    setTimeout(() => {
+                        const divAI = document.createElement('div');
+                        divAI.className = 'message model';
+                        divAI.textContent = "Jaja, me mandaste nota de voz pero ando ocupada. Mejor escríbeme aquí abajito. 🎧";
+                        chatMessages.appendChild(divAI);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 800);
+                });
+            }
+        }
+    }, 500);
+
+    // Ocultar emojis al hacer clic fuera
     document.addEventListener('click', (e) => {
         if (!emojiMenu.contains(e.target)) {
             emojiMenu.style.display = 'none';
