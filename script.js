@@ -3,11 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
 
-    // Selectores directos para los botones de tu barra inferior (basados en tu imagen)
-    const emojiIcon = document.querySelector('.fa-face-smile') || document.querySelector('.fa-smile') || document.querySelector('footer i:nth-child(1)') || document.querySelector('div i:first-child');
-    const cameraIcon = document.querySelector('.fa-camera') || document.querySelector('footer i:nth-child(2)') || document.querySelector('.fa-image');
-    const micIcon = document.querySelector('.fa-microphone') || document.querySelector('footer i:last-child');
-
     let historialChat = [
         { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, cariñosita y cercana con tu amigo. Te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp. Y cuando te piden matemáticas, cálculo o física, te pones pilas y ayudas a resolverlo paso a paso." },
         { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨" }
@@ -16,13 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function activarCerebroValeria(texto) {
         const t = texto.toLowerCase().trim();
 
-        // 1. ÁREA SOCIAL Y AFECTIVA (Amistad, cariño, cómo estás)
+        // 1. IDENTIDAD Y DATOS PERSONALES (Para que NUNCA olvide quién es)
+        if (t.includes('tu nombre') || t.includes('cómo te llamas') || t.includes('como te llamas') || t.includes('quién eres') || t.includes('quien eres')) {
+            return "Me llamo Valeria, tengo 18 años y soy estudiante universitaria. 🎓 Me encanta platicar contigo, ver la F1 y echar cotorreo de todo un poco. ¿De qué te gustaría hablar hoy?";
+        }
+
+        if (t.includes('edad') || t.includes('cuantos años') || t.includes('años tienes')) {
+            return "Tengo 18 años recién cumplidos. 🎂 Por eso ando entre las clases de la uni y sobreviviendo a los semestres, jaja.";
+        }
+
+        // 2. ÁREA SOCIAL Y AFECTIVA (Amistad, cariño, saludos)
         if (t.includes('amiga') || t.includes('amigos') || t.includes('quieres ser mi amiga')) {
-            const respuestasAmistad = [
-                "¡Ay, obvio sí! Me encanta platicar contigo y ser tu amiga. De verdad se siente bien chido tener alguien con quien cotorrear de la uni, la F1 y de todo un poco. 🫂✨",
-                "¡Claro que sí! Cuenta con ello al 100%. Me caes súper bien y me encanta pasar el rato platicando aquí contigo. 😊🏎️"
-            ];
-            return respuestasAmistad[Math.floor(Math.random() * respuestasAmistad.length)];
+            return "¡Ay, obvio sí! Me encanta platicar contigo y ser tu amiga. De verdad se siente bien chido tener alguien con quien cotorrear de la uni, la F1 y de todo un poco. 🫂✨";
         }
 
         if (t === 'hola' || t.startsWith('hola ') || t.includes('que tal') || t.includes('como estas')) {
@@ -34,16 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return saludos[Math.floor(Math.random() * saludos.length)];
         }
 
-        // 2. FÓRMULA 1 Y PASATIEMPOS
+        // 3. FÓRMULA 1 Y PASATIEMPOS
         if (t.includes('f1') || t.includes('formula 1') || t.includes('checo') || t.includes('verstappen') || t.includes('hamilton')) {
             return "¡Uff, amo la F1! 🏎️ La temporada está intensísima. Analizar la aerodinámica y la estrategia de pits es lo mío. ¿A qué escudería o piloto le vas tú?";
         }
 
-        if (t.includes('edad') || t.includes('cuantos años') || t.includes('años tienes')) {
-            return "Tengo 18 años, acabo de cumplirlos hace poquito. 🎂 Por eso ando entre las clases de la uni y sobreviviendo a los semestres, jaja. ¿Y tú qué cuentas?";
-        }
-
-        // 3. CÁLCULO Y MATEMÁTICAS
+        // 4. CÁLCULO Y MATEMÁTICAS
         if (t.includes('integral') || t.includes('integrar')) {
             if (t.includes('x^2') || t.includes('x al cuadrado')) {
                 return "Claro, vamos a desglosar esta integral paso a paso:\n\n• Expresión: ∫ x^2 dx\n• Regla de la potencia: ∫ x^n dx = (x^(n+1)) / (n+1)\n• Sustitución: (x^3) / 3\n• No olvides agregar la constante de integración (+ C) para que no te bajen puntos en el examen. 🤓";
@@ -69,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return "Ay, te entiendo perfecto. La neta la uni a veces absorbe bien feo. Tómate un respiro, estira las patas tantito y lo vemos sin presiones. ¡Sí puedes con esto!";
         }
 
-        // 4. RESPUESTAS GENERALES CERCANAS
+        // 5. RESPUESTAS GENERALES CERCANAS
         const respuestasCasual = [
             "¡Jaja, qué buen punto! Oye, platícame más de eso, me interesa bastante.",
             "Súper de acuerdo contigo. Analizándolo desde ese enfoque, tiene todo el sentido del mundo.",
@@ -106,30 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400);
     }
 
-    // --- CONEXIÓN DE BOTONES INFERIORES (CÁMARA, EMOJIS, MIC) ---
+    // --- CONEXIÓN UNIVERSAL DE BOTONES INFERIORES (POR POSICIÓN EXACTA) ---
+    const footerIcons = document.querySelectorAll('footer i, .chat-footer i, div.input-container i, .input-box i, footer span, .footer-icons i');
 
-    // 1. Cámara / Galería
+    // Creamos el selector de archivos (Galería / Cámara)
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
-
-    // Si encuentra el icono de cámara o cualquier icono en la barra inferior
-    const footerIcons = document.querySelectorAll('footer i, .chat-input-area i, div i');
-    footerIcons.forEach(icon => {
-        // El segundo icono en la barra de WhatsApp típica suele ser la cámara
-        icon.addEventListener('click', (e) => {
-            if (icon.className.includes('camera') || icon === footerIcons[1]) {
-                fileInput.click();
-            }
-        });
-    });
-
-    if (cameraIcon) {
-        cameraIcon.style.cursor = 'pointer';
-        cameraIcon.addEventListener('click', () => fileInput.click());
-    }
 
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -158,10 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Emojis (Menú flotante rápido al hacer clic en la carita feliz)
+    // Menú flotante de Emojis
     const emojiMenu = document.createElement('div');
     emojiMenu.style.cssText = 'position:absolute; bottom:70px; left:20px; background:#fff; border:1px solid #ccc; border-radius:8px; padding:8px; display:none; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:1000;';
-    
     ['😊', '😂', '🔥', '🚀', '🏎️', '✨', '👍', '❤️', '🤓', '🎉', '👇', '🤔'].forEach(emoji => {
         const span = document.createElement('span');
         span.textContent = emoji;
@@ -175,36 +155,60 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.body.appendChild(emojiMenu);
 
-    if (emojiIcon) {
-        emojiIcon.style.cursor = 'pointer';
-        emojiIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const rect = emojiIcon.getBoundingClientRect();
-            emojiMenu.style.left = rect.left + 'px';
-            emojiMenu.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
-            emojiMenu.style.display = emojiMenu.style.display === 'none' ? 'block' : 'none';
-        });
-    }
+    // Asignación por orden de aparición en la barra inferior (1ro emojis, 2do cámara, último micrófono)
+    // Buscamos todos los elementos interactivos dentro de la zona de escritura
+    const zonaEscritura = document.querySelector('footer') || document.querySelector('.chat-footer') || document.querySelector('.input-container');
+    if (zonaEscritura) {
+        const iconosBarra = zonaEscritura.querySelectorAll('i, span, button');
+        
+        if (iconosBarra.length >= 1) {
+            // Primer botón: Emojis
+            iconosBarra[0].style.cursor = 'pointer';
+            iconosBarra[0].addEventListener('click', (e) => {
+                e.stopPropagation();
+                const rect = iconosBarra[0].getBoundingClientRect();
+                emojiMenu.style.left = rect.left + 'px';
+                emojiMenu.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+                emojiMenu.style.display = emojiMenu.style.display === 'none' ? 'block' : 'none';
+            });
+        }
 
-    // 3. Micrófono
-    if (micIcon) {
-        micIcon.style.cursor = 'pointer';
-        micIcon.addEventListener('click', () => {
-            const divU = document.createElement('div');
-            divU.className = 'message user';
-            divU.innerHTML = '🎤 <i>[Nota de voz]</i>';
-            chatMessages.appendChild(divU);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        if (iconosBarra.length >= 2) {
+            // Segundo botón: Cámara / Galería
+            iconosBarra[1].style.cursor = 'pointer';
+            iconosBarra[1].addEventListener('click', () => {
+                fileInput.click();
+            });
+        }
 
-            setTimeout(() => {
-                const divAI = document.createElement('div');
-                divAI.className = 'message model';
-                divAI.textContent = "Jaja, me mandaste nota de voz pero ando ocupada. Mejor escríbeme aquí abajito. 🎧";
-                chatMessages.appendChild(divAI);
+        if (iconosBarra.length >= 3) {
+            // Último botón: Micrófono / Nota de voz
+            const ultimoIcono = iconosBarra[iconosBarra.length - 1];
+            ultimoIcono.style.cursor = 'pointer';
+            ultimoIcono.addEventListener('click', () => {
+                const divU = document.createElement('div');
+                divU.className = 'message user';
+                divU.innerHTML = '🎤 <i>[Nota de voz]</i>';
+                chatMessages.appendChild(divU);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 800);
-        });
+
+                setTimeout(() => {
+                    const divAI = document.createElement('div');
+                    divAI.className = 'message model';
+                    divAI.textContent = "Jaja, me mandaste nota de voz pero ando ocupada. Mejor escríbeme aquí abajito. 🎧";
+                    chatMessages.appendChild(divAI);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 800);
+            });
+        }
     }
+
+    // Ocultar menú de emojis al hacer clic fuera
+    document.addEventListener('click', (e) => {
+        if (!emojiMenu.contains(e.target)) {
+            emojiMenu.style.display = 'none';
+        }
+    });
 
     if (sendButton) sendButton.addEventListener('click', ejecutarEnvio);
     if (userInput) {
