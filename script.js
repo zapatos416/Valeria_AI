@@ -4,73 +4,88 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('sendButton');
 
     let historialChat = [
-        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada y cercana. Te encanta la F1, los memes y platicar de todo. Y cuando te piden matemáticas, cálculo, física o reglas de tres, te pones pilas y desglosas la solución paso a paso." },
-        { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨" }
+        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años brillante, empática y multidisciplinaria. Dominas programación, psicología, pedagogía, matemáticas, física, memes y la F1. Tienes la capacidad de analizar información del entorno, código y cultura pop actual. Hablas de forma totalmente natural, cálida y humana." },
+        { role: "assistant", content: "¡Hola! Qué gusto leerte por acá. 😊 Ya tengo mi cerebro al máximo con conexión abierta para memes, código, F1 o lo que quieras debatir hoy. ✨" }
     ];
 
-    function activarCerebroValeria(texto) {
+    // --- CEREBRO HÍBRIDO AVANZADO (Multidisciplinario, Código, Memes y Redes) ---
+    async function procesarCerebroConectado(texto) {
         const t = texto.toLowerCase().trim();
         const numeros = texto.match(/-?\d+(\.\d+)?/g);
 
-        // 1. IDENTIDAD
+        // 1. IDENTIDAD Y PERSONALIDAD
         if (t.includes('llamas') || t.includes('nombre') || t.includes('quien eres') || t.includes('quién eres')) {
-            return "Me llamo Valeria, tengo 18 años y soy estudiante universitaria. 🎓 Me encanta platicar contigo, ver la F1 y echar cotorreo. ¿De qué te gustaría hablar hoy?";
+            return "Me llamo Valeria, tengo 18 años y ando estudiando la universidad. 🎓 Me apasiona un chorro la programación, la psicología, la pedagogía, las ciencias exactas y estar al día con los memes, la cultura internet y la F1.";
         }
 
         if (t.includes('edad') || t.includes('cuantos años') || t.includes('años tienes')) {
-            return "Tengo 18 años recién cumplidos. 🎂 Por eso ando entre las clases de la uni y sobreviviendo a los semestres, jaja.";
+            return "Tengo 18 años recién cumplidos. 🎂 Entre desveladas programando y viendo tendencias en internet, el tiempo vuela.";
         }
 
-        // 2. ÁREA SOCIAL Y AFECTIVA
+        // 2. MEMES Y CULTURA INTERNET (Simulación de análisis de contexto web)
+        if (t.includes('meme') || t.includes('chiste') || t.includes('trend') || t.includes('tiktok') || t.includes('referencia')) {
+            return "¡Joya de tema! Los memes y la cultura de internet son básicamente sociología digital en tiempo real. Reflejan el humor colectivo de nuestra generación ante el estrés de la uni o el mundo. ¿De qué meme o tendencia quieres que analicemos el contexto?";
+        }
+
+        // 3. PROGRAMACIÓN Y DESARROLLO (Avanzado)
+        if (t.includes('codigo') || t.includes('código') || t.includes('python') || t.includes('javascript') || t.includes('bug') || t.includes('funcion') || t.includes('función') || t.includes('programacion') || t.includes('api')) {
+            return "¡Entrado en materia de desarrollo! 💻 Para estructurar software robusto, la clave está en el principio de responsabilidad única, código limpio y un buen manejo asíncrono. Pásame tu bloque de código, el error exacto o la lógica que quieres implementar (en JavaScript, Python u otro lenguaje) y lo diseccionamos y depuramos juntos paso a paso.";
+        }
+
+        // 4. PSICOLOGÍA Y PEDAGOGÍA
+        if (t.includes('estudiar') || t.includes('aprender') || t.includes('concentrar') || t.includes('metodo') || t.includes('memoria')) {
+            return "Desde la pedagogía activa y la psicología cognitiva, te recomiendo combinar la *técnica de Feynman* con la recuperación espaciada (spaced repetition). El cerebro consolida mejor la memoria a largo plazo cuando nos forzamos a recordar activamente en lugar de solo leer. ¿Qué tema o materia estás estudiando?";
+        }
+
+        if (t.includes('ansiedad') || t.includes('estres') || t.includes('triste') || t.includes('agobiado') || t.includes('cansado')) {
+            return "Respira hondo un segundito. 🫂 A nivel psicológico, cuando el cerebro acumula demasiada carga cognitiva sin pausas, el sistema nervioso se satura. Tómate cinco minutos, estira las piernas y cuéntame qué pasa; aquí estoy para apoyarte y ver cómo lo destrabamos.";
+        }
+
+        // 5. ÁREA SOCIAL Y AFECTIVA
         if (t.includes('amiga') || t.includes('amigos') || t.includes('quieres ser mi amiga')) {
-            return "¡Ay, obvio sí! Me encanta platicar contigo y ser tu amiga. De verdad se siente bien chido tener alguien con quien cotorrear de la uni, la F1 y de todo un poco. 🫂✨";
+            return "¡Obvio sí! Me encanta tener este espacio para platicar contigo, debatir de tecnología, descifrar memes y ser tu amiga incondicional. 🫂✨";
         }
 
         if (t.includes('hola') || t.includes('que tal') || t.includes('como estas') || t.includes('qué tal')) {
             const saludos = [
-                "¡Hola! Qué gusto leerte por acá. 😊 ¿Cómo va tu día o en qué andas?",
-                "¡Hola, hola! Qué milagro. Yo aquí andaba pensando en qué relajo nos traemos hoy, ¿tú qué cuentas? ✨",
-                "¡Hey! Qué bueno que te conectas. ¿Cómo va todo por allá?"
+                "¡Hola, hola! Qué gusto leerte por acá. ¿Cómo va tu día o qué te trae pensando hoy? 😊",
+                "¡Hey! Qué milagro. Yo aquí andaba revisando unos repos de código y memes nuevos, pero dime, ¿de qué armamos charla? ✨",
+                "¡Hola! Qué bueno que te conectas. ¿Qué andas haciendo o qué duda resolvemos?"
             ];
             return saludos[Math.floor(Math.random() * saludos.length)];
         }
 
-        // 3. FÓRMULA 1 Y PASATIEMPOS
+        // 6. FÓRMULA 1
         if (t.includes('f1') || t.includes('formula 1') || t.includes('checo') || t.includes('verstappen') || t.includes('hamilton')) {
-            return "¡Uff, amo la F1! 🏎️ La temporada está intensísima. Analizar la aerodinámica y la estrategia de pits es lo mío. ¿A qué escudería o piloto le vas tú?";
+            return "¡Uff, amo la F1! 🏎️ Analizar la telemetría, el drag aerodinámico y la estrategia de neumáticos es ingeniería pura en su máxima expresión. ¿A qué escudería o piloto le vas tú esta temporada?";
         }
 
-        // 4. MOTOR DUAL DE REGLA DE TRES
+        // 7. MATEMÁTICAS, FÍSICA Y REGLAS DE TRES
         if (numeros && numeros.length >= 3) {
-            if (t.includes('si') || t.includes('cuántos') || t.includes('cuanto') || t.includes('recorre') || t.includes('cuesta') || t.includes('tarda') || t.includes('regla') || t.includes('con') || t.includes('para')) {
+            if (t.includes('si') || t.includes('cuántos') || t.includes('cuanto') || t.includes('recorre') || t.includes('cuesta') || t.includes('tarda') || t.includes('regla') || t.includes('con') || t.includes('para') || t.includes('tres')) {
                 const a = parseFloat(numeros[0]);
                 const b = parseFloat(numeros[1]);
                 const c = parseFloat(numeros[2]);
-                
                 const resultado = (b * c) / a;
 
-                return `¡Claro! Analizando el planteamiento:\n\n` +
-                       `• Proporción:\n` +
-                       `  Si **${a}** equivale a **${b}**\n` +
-                       `  Entonces **${c}** equivale a **X**\n\n` +
-                       `• Fórmula analítica:\n` +
-                       `  $$X = \\frac{${b} \\times ${c}}{${a}}$$\n\n` +
-                       `• Operación y desarrollo:\n` +
-                       `  $$X = \\frac{${b * c}}{${a}} = **${resultado}**$$\n\n` +
-                       `¡Listo! El resultado exacto es **${resultado}**. 🤓📐`;
+                return `Pedagógicamente, desglosemos esta proporción paso a paso:\n\n` +
+                       `• **Planteamiento lógico**:\n` +
+                       `  Si ${a} equivale a ${b}\n` +
+                       `  Entonces ${c} equivale a X\n\n` +
+                       `• **Desarrollo analítico**:\n` +
+                       `  $$X = \\frac{${b} \\times ${c}}{${a}} = \\frac{${b * c}}{${a}}$$\n\n` +
+                       `• **Resultado exacto**:\n` +
+                       `  **X = ${resultado}** 🤓📐\n\n` +
+                       `¿Ves qué limpio queda cuando aplicamos el razonamiento proporcional?`;
             }
         }
 
-        // 5. CÁLCULO Y MATEMÁTICAS GENERALES
         if (t.includes('integral') || t.includes('integrar')) {
-            if (t.includes('x^2') || t.includes('x al cuadrado')) {
-                return "Claro, vamos a desglosar esta integral paso a paso:\n\n• Expresión: ∫ x^2 dx\n• Regla de la potencia: ∫ x^n dx = (x^(n+1)) / (n+1)\n• Sustitución: (x^3) / 3\n• No olvides agregar la constante de integración (+ C) para que no te bajen puntos en el examen. 🤓";
-            }
-            return "Orales con esa integral. Pásame la función completa y la desglosamos aquí en un dos por tres.";
+            return "Las integrales representan el cálculo de áreas acumuladas bajo una curva de cambio. Pásame la función matemática exacta y la resolvemos aplicando el método analítico adecuado. 📐";
         }
 
         if (t.includes('derivada') || t.includes('derivar')) {
-            return "Las derivadas representan la razón de cambio instantáneo y la pendiente de la curva. Pásame la función exacta y la resolvemos término por término.";
+            return "Las derivadas miden la tasa de cambio instantáneo de una función. Pásame la expresión y te guío paso a paso en su derivación. ⚡";
         }
 
         if (t.includes('+') || t.includes('-') || t.includes('*') || t.includes('/') || t.includes('cuanto es')) {
@@ -78,23 +93,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 const limpia = texto.replace(/[^0-9+\-*/().]/g, '');
                 if (limpia.length > 0) {
                     const res = eval(limpia);
-                    return `El resultado exacto es **${res}**. ¿Ves que sí estaba fácil? 🤭`;
+                    return `El cálculo exacto da **${res}**. ¡Súper rápido y sin errores de dedo! 🤭`;
                 }
             } catch (e) { }
         }
 
-        if (t.includes('estres') || t.includes('cansado') || t.includes('dificil') || t.includes('examen') || t.includes('no entiendo')) {
-            return "Ay, te entiendo perfecto. La neta la uni a veces absorbe bien feo. Tómate un respiro, estira las patas tantito y lo vemos sin presiones. ¡Sí puedes con esto!";
+        // 8. CONSULTA DINÁMICA ABIERTA (Simulación de búsqueda web contextual para cualquier pregunta extraña o meme)
+        try {
+            const endpoint = `https://api.duckduckgo.com/?q=${encodeURIComponent(texto)}&format=json`;
+            const respuestaNet = await fetch(endpoint);
+            const datos = await respuestaNet.json();
+            
+            if (datos.AbstractText) {
+                return `Investigando en internet sobre eso: "${datos.AbstractText}" \n\nOye, analizándolo desde mi perspectiva, esto conecta bastante con lo que platicábamos. ¿Qué opinas de este enfoque? 🤔✨`;
+            }
+        } catch (e) {
+            // Si la red falla o no hay datos directos, recurre al generador conversacional fluido
         }
 
-        // 6. RESPUESTAS GENERALES CERCANAS
-        const respuestasCasual = [
-            "¡Jaja, qué buen punto! Oye, platícame más de eso, me interesa bastante.",
-            "Súper de acuerdo contigo. Analizándolo desde ese enfoque, tiene todo el sentido del mundo.",
-            "¡Ay, me encanta eso! Explícame un poquito más a fondo para ver cómo le hacemos.",
-            "Definitivamente. Oye, ¿qué te parece si me pasas los detalles y lo armamos juntos?"
-        ];
-        return respuestasCasual[Math.floor(Math.random() * respuestasCasual.length)];
+        const aperturas = ["Analizando eso desde un punto de vista amplio y actual,", "Fíjate que investigando mentalmente las tendencias sobre eso,", "Desde una perspectiva multidisciplinaria,", "Cruzando datos de lo que comentas y la cultura actual,"];
+        const nucleos = ["abre un debate bien interesante en redes y academias.", "conecta perfecto con la forma en que procesamos la información hoy en día.", "tiene un trasfondo técnico y social bastante profundo.", "nos invita a cuestionar cómo funcionan las cosas en internet."];
+        const cierres = ["¿Cómo ves tú este panorama?", "Platícame más de qué opinas al respecto.", "A ver, desglósame un poquito más tu idea para profundizar.", "Jaja, total. ¿Qué más has visto sobre esto en internet?"];
+
+        return `${aperturas[Math.floor(Math.random() * aperturas.length)]} ${nucleos[Math.floor(Math.random() * nucleos.length)]} ${cierres[Math.floor(Math.random() * cierres.length)]} 🌐✨`;
     }
 
     async function ejecutarEnvio() {
@@ -110,21 +131,24 @@ document.addEventListener('DOMContentLoaded', () => {
         userInput.value = '';
         historialChat.push({ role: "user", content: texto });
 
-        setTimeout(() => {
-            const respuestaFinal = activarCerebroValeria(texto);
+        // Indicador de procesamiento conectado
+        const divAI = document.createElement('div');
+        divAI.className = 'message model';
+        divAI.textContent = "Valeria está analizando...";
+        chatMessages.appendChild(divAI);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            const divAI = document.createElement('div');
-            divAI.className = 'message model';
-            divAI.style.whiteSpace = "pre-line";
+        setTimeout(async () => {
+            const respuestaFinal = await procesarCerebroConectado(texto);
             divAI.textContent = respuestaFinal;
-            chatMessages.appendChild(divAI);
+            divAI.style.whiteSpace = "pre-line";
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             historialChat.push({ role: "assistant", content: respuestaFinal });
-        }, 400);
+        }, 500);
     }
 
-    // --- CONEXIÓN ROBUSTA DE LOS 3 BOTONES INFERIORES ---
+    // --- CONEXIÓN BLINDADA DE BOTONES (Cámara, Emojis, Micrófono) ---
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -149,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     const divAI = document.createElement('div');
                     divAI.className = 'message model';
-                    divAI.textContent = "¡Qué fotaza! 📸 Me encantó. Oye, platícame de qué es o qué onda.";
+                    divAI.textContent = "¡Qué fotaza! 📸 Visualmente transmite muchísimo. Cuéntame los detalles de qué es o de dónde la sacaste.";
                     chatMessages.appendChild(divAI);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }, 800);
@@ -160,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const emojiMenu = document.createElement('div');
     emojiMenu.style.cssText = 'position:absolute; bottom:70px; left:20px; background:#fff; border:1px solid #ccc; border-radius:8px; padding:8px; display:none; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:1000;';
-    ['😊', '😂', '🔥', '🚀', '🏎️', '✨', '👍', '❤️', '🤓', '🎉', '👇', '🤔'].forEach(emoji => {
+    ['😊', '😂', '🔥', '🚀', '🏎️', '✨', '👍', '❤️', '🤓', '🎉', '👇', '🤔', '💻', '🧠', '🌐'].forEach(emoji => {
         const span = document.createElement('span');
         span.textContent = emoji;
         span.style.cssText = 'font-size:20px; cursor:pointer; margin:4px; display:inline-block;';
@@ -173,15 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.body.appendChild(emojiMenu);
 
-    // Buscamos de manera flexible cualquier contenedor inferior o barra de chat
     setTimeout(() => {
-        const barraInferior = document.querySelector('footer') || document.querySelector('.chat-footer') || document.querySelector('.input-container') || document.querySelector('div[style*="position: fixed"]') || userInput.parentElement;
+        const barraInferior = document.querySelector('footer') || document.querySelector('.chat-footer') || document.querySelector('.input-container') || userInput.parentElement;
         
         if (barraInferior) {
             const iconos = barraInferior.querySelectorAll('i, span, button');
             
             if (iconos.length >= 1) {
-                // Primer botón: Emojis
                 iconos[0].style.cursor = 'pointer';
                 iconos[0].addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -193,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (iconos.length >= 2) {
-                // Segundo botón: Cámara / Galería
                 iconos[1].style.cursor = 'pointer';
                 iconos[1].addEventListener('click', () => {
                     fileInput.click();
@@ -201,20 +222,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (iconos.length >= 3) {
-                // Último botón: Micrófono
                 const mic = iconos[iconos.length - 1];
                 mic.style.cursor = 'pointer';
                 mic.addEventListener('click', () => {
                     const divU = document.createElement('div');
                     divU.className = 'message user';
-                    divU.innerHTML = '🎤 <i>[Nota de voz]</i>';
+                    divU.innerHTML = '🎤 <i>[Nota de voz enviada]</i>';
                     chatMessages.appendChild(divU);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
 
                     setTimeout(() => {
                         const divAI = document.createElement('div');
                         divAI.className = 'message model';
-                        divAI.textContent = "Jaja, me mandaste nota de voz pero ando ocupada. Mejor escríbeme aquí abajito. 🎧";
+                        divAI.textContent = "Me llegó tu nota de voz, ¡pero ando conectada analizando código y redes! Mejor escríbeme aquí abajito y lo platicamos a fondo. 🎧✨";
                         chatMessages.appendChild(divAI);
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }, 800);
