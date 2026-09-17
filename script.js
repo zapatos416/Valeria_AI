@@ -2,114 +2,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
-    const typingIndicator = document.getElementById('typingIndicator');
-    const headerStatus = document.getElementById('headerStatus');
-    const emojiToggleBtn = document.getElementById('emojiToggleBtn');
-    const emojiPicker = document.getElementById('emojiPicker');
-    const emojiBtns = document.querySelectorAll('.emoji-btn');
 
-    // 🔑 TU API KEY DE GROQ
     const GROQ_API_KEY = "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";
 
-    let historialChat = [
-        {
-            role: "system",
-            content: "Eres Valeria, una asistente de IA brillante, precisa y cercana, diseñada para apoyar a estudiantes universitarios en materias complejas (matemáticas avanzadas, física, cálculo, programación, redacción de ensayos e investigación) y también como compañera empática. Cuando te pregunten operaciones matemáticas (como 2+2) u otro cálculo, responde de forma directa, exacta y clara."
-        },
-        {
-            role: "assistant",
-            content: "¡Hola! Qué gusto saludarte por aquí. 😊 Ya estoy conectada y lista con todo mi potencial para resolver cálculos exactos, explicarte matemáticas o ayudarte con tus investigaciones universitarias. ¿Qué vemos hoy?"
-        }
+    let historial = [
+        { role: "system", content: "Eres Valeria, una asistente universitaria amigable y experta en matemáticas." },
+        { role: "assistant", content: "¡Hola! Ya estoy lista. ¿Qué vamos a resolver hoy?" }
     ];
 
-    async function enviarMensaje() {
+    async function enviar() {
         const texto = userInput.value.trim();
         if (!texto) return;
 
-        agregarMensajeAlDOM(texto, 'user');
+        // Poner mensaje del usuario en pantalla
+        const divU = document.createElement('div');
+        divU.className = 'message user';
+        divU.textContent = texto;
+        chatMessages.appendChild(divU);
+        
         userInput.value = '';
-        mostrarEscribiendo(true);
-
-        historialChat.push({ role: "user", content: texto });
+        historial.push({ role: "user", content: texto });
 
         try {
-            // Usamos la ruta oficial completa y aseguramos los headers limpios
-            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${GROQ_API_KEY.trim()}`,
+                    "Authorization": `Bearer ${GROQ_API_KEY}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
-                    messages: historialChat,
-                    temperature: 0.3,
-                    max_tokens: 2048
+                    messages: historial,
+                    temperature: 0.5
                 })
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            mostrarEscribiendo(false);
-
+            const data = await res.json();
+            
             if (data.choices && data.choices.length > 0) {
-                const respuestaIA = data.choices[0].message.content;
-                agregarMensajeAlDOM(respuestaIA, 'model');
-                historialChat.push({ role: "assistant", content: respuestaIA });
+                const respuesta = data.choices[0].message.content;
+                
+                // Poner respuesta de la IA en pantalla
+                const divAI = document.createElement('div');
+                divAI.className = 'message model';
+                divAI.textContent = respuesta;
+                chatMessages.appendChild(divAI);
+                
+                historial.push({ role: "assistant", content: respuesta });
             } else {
-                throw new Error("Estructura de respuesta inválida");
+                throw new Error("Sin respuesta válida");
             }
-
-        } catch (error) {
-            console.error("Detalle del error:", error);
-            mostrarEscribiendo(false);
-            agregarMensajeAlDOM("Ups, hubo un problema al conectar con el servidor. Revisa la consola para más detalles.", 'model');
-        }
-    }
-
-    function agregarMensajeAlDOM(texto, remitente) {
-        const div = document.createElement('div');
-        div.className = `message ${remitente}`;
-        div.textContent = texto;
-        chatMessages.appendChild(div);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function mostrarEscribiendo(mostrar) {
-        if (typingIndicator) {
-            typingIndicator.style.display = mostrar ? 'block' : 'none';
-        }
-        if (headerStatus) {
-            headerStatus.textContent = mostrar ? 'Valeria está pensando...' : 'En línea';
+        } catch (err) {
+            const divErr = document.createElement('div');
+            divErr.className = 'message model';
+            divErr.textContent = "Error de conexión con el servidor.";
+            chatMessages.appendChild(divErr);
         }
     }
 
     if (sendButton) {
-        sendButton.addEventListener('click', enviarMensaje);
+        sendButton.addEventListener('click', enviar);
     }
 
     if (userInput) {
         userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                enviarMensaje();
-            }
-        });
-    }
-
-    if (emojiToggleBtn && emojiPicker) {
-        emojiToggleBtn.addEventListener('click', () => {
-            emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
-        });
-
-        emojiBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                userInput.value += btn.textContent;
-                emojiPicker.style.display = 'none';
-                userInput.focus();
-            });
+            if (e.key === 'Enter') enviar();
         });
     }
 });
