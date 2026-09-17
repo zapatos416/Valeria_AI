@@ -4,12 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('sendButton');
 
     let historialChat = [
-        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada y cercana. Te encanta la F1, los memes y platicar de todo. Y cuando te piden matemáticas, cálculo, física o reglas de tres, te pones pilas y desglosas la solución paso a paso con rigor técnico." },
+        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada y cercana. Te encanta la F1, los memes y platicar de todo. Y cuando te piden matemáticas, cálculo, física o reglas de tres (por número o por palabra), te pones pilas y desglosas la solución paso a paso." },
         { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨" }
     ];
 
     function activarCerebroValeria(texto) {
         const t = texto.toLowerCase().trim();
+        const numeros = texto.match(/-?\d+(\.\d+)?/g);
 
         // 1. IDENTIDAD
         if (t.includes('llamas') || t.includes('nombre') || t.includes('quien eres') || t.includes('quién eres')) {
@@ -39,30 +40,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return "¡Uff, amo la F1! 🏎️ La temporada está intensísima. Analizar la aerodinámica y la estrategia de pits es lo mío. ¿A qué escudería o piloto le vas tú?";
         }
 
-        // 4. MOTOR GENERAL DE REGLA DE TRES (Detecta números y calcula de forma dinámica)
-        if (t.includes('regla de tres') || t.includes('si') && t.includes('entonces') || t.includes('cuesta') || t.includes('tarda')) {
-            // Extraemos todos los números que escribas en el mensaje
-            const numeros = texto.match(/-?\d+(\.\d+)?/g);
-            
-            if (numeros && numeros.length >= 3) {
+        // 4. MOTOR DUAL DE REGLA DE TRES (Funciona tanto por palabra/problema como por números directos)
+        if (numeros && numeros.length >= 3) {
+            // Si incluye palabras de problema redactado O palabras clave como "regla", "tres", "con"
+            if (t.includes('si') || t.includes('cuántos') || t.includes('cuanto') || t.includes('recorre') || t.includes('cuesta') || t.includes('tarda') || t.includes('regla') || t.includes('con') || t.includes('para')) {
                 const a = parseFloat(numeros[0]);
                 const b = parseFloat(numeros[1]);
                 const c = parseFloat(numeros[2]);
                 
-                // Fórmula de regla de tres directa: (b * c) / a
                 const resultado = (b * c) / a;
 
-                return `¡Claro! Vamos a plantear esta **regla de tres directa** paso a paso:\n\n` +
-                       `• Planteamiento:\n` +
+                return `¡Claro! Analizando el planteamiento:\n\n` +
+                       `• Proporción:\n` +
                        `  Si **${a}** equivale a **${b}**\n` +
                        `  Entonces **${c}** equivale a **X**\n\n` +
                        `• Fórmula analítica:\n` +
                        `  $$X = \\frac{${b} \\times ${c}}{${a}}$$\n\n` +
-                       `• Operación:\n` +
+                       `• Operación y desarrollo:\n` +
                        `  $$X = \\frac{${b * c}}{${a}} = **${resultado}**$$\n\n` +
-                       `¡Listo! El resultado exacto es **${resultado}**. ¿Ves qué fácil sale con su proporción? 🤓📐`;
-            } else {
-                return "Para armar la regla de tres, pásame los 3 datos numéricos completos (por ejemplo: *'si 5 cuestan 20, cuánto cuestan 12'*), ¡y te hago el cálculo exacto de inmediato!";
+                       `¡Listo! El resultado exacto es **${resultado}**. 🤓📐`;
             }
         }
 
@@ -153,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 setTimeout(() => {
                     const divAI = document.createElement('div');
+                    divAI.className.print = '';
                     divAI.className = 'message model';
                     divAI.textContent = "¡Qué fotaza! 📸 Me encantó. Oye, platícame de qué es o qué onda.";
                     chatMessages.appendChild(divAI);
