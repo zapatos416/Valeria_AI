@@ -14,11 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const texto = userInput.value.trim();
         if (!texto) return;
 
-        // Poner mensaje del usuario en pantalla
+        // Mostrar mensaje del usuario en pantalla
         const divU = document.createElement('div');
         divU.className = 'message user';
         divU.textContent = texto;
         chatMessages.appendChild(divU);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
         
         userInput.value = '';
         historial.push({ role: "user", content: texto });
@@ -42,21 +43,24 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.choices && data.choices.length > 0) {
                 const respuesta = data.choices[0].message.content;
                 
-                // Poner respuesta de la IA en pantalla
+                // Mostrar respuesta de Valeria en pantalla
                 const divAI = document.createElement('div');
                 divAI.className = 'message model';
                 divAI.textContent = respuesta;
                 chatMessages.appendChild(divAI);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
                 
                 historial.push({ role: "assistant", content: respuesta });
             } else {
-                throw new Error("Sin respuesta válida");
+                throw new Error("Sin respuesta válida del servidor");
             }
         } catch (err) {
+            console.error("Error detectado:", err);
             const divErr = document.createElement('div');
             divErr.className = 'message model';
-            divErr.textContent = "Error de conexión con el servidor.";
+            divErr.textContent = "Ups, ocurrió un error de conexión con el servidor.";
             chatMessages.appendChild(divErr);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     }
 
