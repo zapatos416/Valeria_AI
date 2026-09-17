@@ -3,12 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
 
-    let historial = [
+    let historialChat = [
         { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp. Y cuando te piden matemáticas, cálculo o física, te pones pilas y ayudas a resolverlo paso a paso." },
-        { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Cómo va tu día? Cuéntame qué has hecho o qué resolvemos hoy. ✨" }
+        { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 Ya quedó limpio el sistema, ¿qué tal va tu día? Cuéntame qué resolvemos hoy. ✨" }
     ];
 
-    function procesarCerebroLocal(texto) {
+    function activarCerebroValeria(texto) {
         const t = texto.toLowerCase();
 
         // 1. FÓRMULA 1 Y TEMAS COTIDIANOS
@@ -49,16 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 5. PLÁTICA HUMANA Y GENERAL
-        const casuales = [
+        const respuestasCasual = [
             "¡Jaja, qué buen punto! Oye, platícame más de eso o pásame el planteamiento completo.",
             "Súper de acuerdo contigo. Analizándolo desde ese enfoque, tiene todo el sentido del mundo.",
             "¡Ay, me encanta ese tema! Explícame un poquito más a fondo para ver cómo le hacemos.",
             "Definitivamente. Oye, ¿qué te parece si me pasas los datos exactos y lo armamos?"
         ];
-        return casuales[Math.floor(Math.random() * casuales.length)];
+        return respuestasCasual[Math.floor(Math.random() * respuestasCasual.length)];
     }
 
-    async function enviar() {
+    async function ejecutarEnvio() {
         const texto = userInput.value.trim();
         if (!texto) return;
 
@@ -69,26 +69,26 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
         
         userInput.value = '';
-        historial.push({ role: "user", content: texto });
+        historialChat.push({ role: "user", content: texto });
 
         setTimeout(() => {
-            const respuestaLocal = procesarCerebroLocal(texto);
+            const respuestaFinal = activarCerebroValeria(texto);
 
             const divAI = document.createElement('div');
             divAI.className = 'message model';
             divAI.style.whiteSpace = "pre-line";
-            divAI.textContent = respuestaLocal;
+            divAI.textContent = respuestaFinal;
             chatMessages.appendChild(divAI);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            historial.push({ role: "assistant", content: respuestaLocal });
-        }, 600);
+            historialChat.push({ role: "assistant", content: respuestaFinal });
+        }, 400);
     }
 
-    if (sendButton) sendButton.addEventListener('click', enviar);
+    if (sendButton) sendButton.addEventListener('click', ejecutarEnvio);
     if (userInput) {
         userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') enviar();
+            if (e.key === 'Enter') ejecutarEnvio();
         });
     }
 });
