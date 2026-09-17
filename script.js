@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
-    const attachBtn = document.getElementById('attachBtn');
-    const imageInput = document.getElementById('imageInput');
     const typingIndicator = document.getElementById('typingIndicator');
     const headerStatus = document.getElementById('headerStatus');
     const emojiToggleBtn = document.getElementById('emojiToggleBtn');
@@ -35,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userInput.value = '';
         mostrarEscribiendo(true);
 
-        // Agregar al historial de la conversación de forma segura
+        // Agregar al historial de la conversación
         historialChat.push({ role: "user", content: texto });
 
         try {
