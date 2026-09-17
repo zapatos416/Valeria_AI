@@ -3,14 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
 
-    // Referencias a los botones de la barra inferior (emojis, adjuntar foto, micrófono)
-    const emojiButton = document.querySelector('.fa-face-smile') || document.querySelector('.fa-smile') || document.querySelector('input ~ div i.fa, footer i:nth-child(1)');
-    const photoButton = document.querySelector('.fa-camera') || document.querySelector('footer i:nth-child(2)');
-    const micButton = document.querySelector('.fa-microphone') || document.querySelector('footer i:last-child');
-
     let historialChat = [
         { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp. Y cuando te piden matemáticas, cálculo o física, te pones pilas y ayudas a resolverlo paso a paso." },
-        { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 Ya quedó todo conectado, ¿qué tal va tu día? ✨" }
+        { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨" }
     ];
 
     function activarCerebroValeria(texto) {
@@ -19,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (t === 'hola' || t.startsWith('hola ') || t.includes('que tal') || t.includes('buenos dias') || t.includes('buenas tardes')) {
             const saludos = [
                 "¡Hola! Qué gusto leerte por acá. 😊 ¿Cómo va tu día o en qué andas?",
-                "¡Hola, hola! ¿Qué cuentas? Yo aquí andaba distraída con unas cosas, pero dime, ¿de qué platicamos hoy? ✨",
+                "¡Hola, hola! Qué cuentas. Yo aquí andaba distraída con unas cosas, pero dime, ¿de qué platicamos hoy? ✨",
                 "¡Hey! Qué milagro que te pasas por aquí. ¿Cómo va todo por allá?"
             ];
             return saludos[Math.floor(Math.random() * saludos.length)];
@@ -94,28 +89,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400);
     }
 
-    // --- ACCESORIOS Y BOTONES INFERIORES ---
-
-    // 1. Botón de foto/cámara: Abre el selector de archivos de tu compu o cel para mandar imágenes
+    // --- 1. CÁMARA / GALERÍA BLINDADA ---
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
 
-    if (photoButton) {
-        photoButton.style.cursor = 'pointer';
-        photoButton.addEventListener('click', () => {
-            fileInput.click();
-        });
-    }
+    const todosLosIconos = document.querySelectorAll('i, span, button');
+    todosLosIconos.forEach(el => {
+        const cl = el.className.toLowerCase();
+        if (cl.includes('camera') || cl.includes('image') || cl.includes('photo')) {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                fileInput.click();
+            });
+        }
+    });
 
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(uploadEvent) {
-                // Mostrar la imagen en el chat como mensaje del usuario
                 const divU = document.createElement('div');
                 divU.className = 'message user';
                 const img = document.createElement('img');
@@ -126,11 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatMessages.appendChild(divU);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
 
-                // Respuesta de Valeria reaccionando a la foto
                 setTimeout(() => {
                     const divAI = document.createElement('div');
                     divAI.className = 'message model';
-                    divAI.textContent = "¡Ándale, qué buena foto! Oye, se ve increíble. Platícame qué es o de dónde la sacaste. 📸✨";
+                    divAI.textContent = "¡Qué buena foto! 📸 Se ve excelente. Platícame de qué es o qué onda.";
                     chatMessages.appendChild(divAI);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }, 800);
@@ -139,36 +135,80 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Botón de emojis: Inserta caritas felices rápido en el cuadro de texto
-    if (emojiButton) {
-        emojiButton.style.cursor = 'pointer';
-        emojiButton.addEventListener('click', () => {
-            const emojisPopulares = ['😊', '🚀', '🏎️', '✨', '🔥', '😅', '💡', '💯'];
-            const randomEmoji = emojisPopulares[Math.floor(Math.random() * emojisPopulares.length)];
-            userInput.value += randomEmoji;
+    // --- 2. PANEL DE EMOJIS FLOTANTE ---
+    // Creamos un menú flotante con emojis para que al hacer clic en la carita feliz se abra
+    const emojiPicker = document.createElement('div');
+    emojiPicker.style.position = 'absolute';
+    emojiPicker.style.bottom = '70px';
+    emojiPicker.style.left = '20px';
+    emojiPicker.style.background = '#ffffff';
+    emojiPicker.style.border = '1px solid #ccc';
+    emojiPicker.style.borderRadius = '8px';
+    emojiPicker.style.padding = '8px';
+    emojiPicker.style.display = 'none';
+    emojiPicker.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    emojiPicker.style.zIndex = '1000';
+    
+    const emojisDisponibles = ['😊', '😂', '🔥', '🚀', '🏎️', '✨', '👍', '❤️', '🤓', '🎉', '👇', '🤔'];
+    emojisDisponibles.forEach(emoji => {
+        const span = document.createElement('span');
+        span.textContent = emoji;
+        span.style.fontSize = '20px';
+        span.style.cursor = 'pointer';
+        span.style.margin = '4px';
+        span.style.display = 'inline-block';
+        span.addEventListener('click', () => {
+            userInput.value += emoji;
             userInput.focus();
+            emojiPicker.style.display = 'none';
         });
-    }
+        emojiPicker.appendChild(span);
+    });
+    document.body.appendChild(emojiPicker);
 
-    // 3. Botón de micrófono: Simula el envío de una nota de voz
-    if (micButton) {
-        micButton.style.cursor = 'pointer';
-        micButton.addEventListener('click', () => {
-            const divU = document.createElement('div');
-            divU.className = 'message user';
-            divU.innerHTML = '🎤 <i>[Nota de voz enviada]</i>';
-            chatMessages.appendChild(divU);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+    todosLosIconos.forEach(el => {
+        const cl = el.className.toLowerCase();
+        if (cl.includes('smile') || cl.includes('face') || cl.includes('emoji')) {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const rect = el.getBoundingClientRect();
+                emojiPicker.style.left = rect.left + 'px';
+                emojiPicker.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+                emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+    });
 
-            setTimeout(() => {
-                const divAI = document.createElement('div');
-                divAI.className = 'message model';
-                divAI.textContent = "Jaja, me mandaste nota de voz pero ando con los audífonos ocupados redactando unas cosas de la uni. Mejor escríbime aquí abajito qué me decías. 🎧👇";
-                chatMessages.appendChild(divAI);
+    // Ocultar el panel de emojis si haces clic fuera
+    document.addEventListener('click', (e) => {
+        if (!emojiPicker.contains(e.target) && !e.target.className.includes('smile')) {
+            emojiPicker.style.display = 'none';
+        }
+    });
+
+    // --- 3. MICRÓFONO / NOTA DE VOZ ---
+    todosLosIconos.forEach(el => {
+        const cl = el.className.toLowerCase();
+        if (cl.includes('microphone') || cl.includes('mic') || cl.includes('audio')) {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', () => {
+                const divU = document.createElement('div');
+                divU.className = 'message user';
+                divU.innerHTML = '🎤 <i>[Nota de voz]</i>';
+                chatMessages.appendChild(divU);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        });
-    }
+
+                setTimeout(() => {
+                    const divAI = document.createElement('div');
+                    divAI.className = 'message model';
+                    divAI.textContent = "Jaja, me mandaste nota de voz pero ando ocupada redactando. Mejor escríbeme aquí abajito. 🎧";
+                    chatMessages.appendChild(divAI);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 800);
+            });
+        }
+    });
 
     if (sendButton) sendButton.addEventListener('click', ejecutarEnvio);
     if (userInput) {
