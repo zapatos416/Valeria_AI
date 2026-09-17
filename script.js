@@ -4,14 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('sendButton');
 
     let historialChat = [
-        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, cariñosita y cercana. Te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp." },
+        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada y cercana. Te encanta la F1, los memes y platicar de todo. Y cuando te piden matemáticas, cálculo, física o reglas de tres, te pones pilas y desglosas la solución paso a paso con rigor técnico." },
         { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨" }
     ];
 
     function activarCerebroValeria(texto) {
         const t = texto.toLowerCase().trim();
 
-        // 1. IDENTIDAD (Evaluación amplia para que NUNCA falle cuando le preguntes quién es o su nombre)
+        // 1. IDENTIDAD
         if (t.includes('llamas') || t.includes('nombre') || t.includes('quien eres') || t.includes('quién eres')) {
             return "Me llamo Valeria, tengo 18 años y soy estudiante universitaria. 🎓 Me encanta platicar contigo, ver la F1 y echar cotorreo. ¿De qué te gustaría hablar hoy?";
         }
@@ -39,7 +39,34 @@ document.addEventListener('DOMContentLoaded', () => {
             return "¡Uff, amo la F1! 🏎️ La temporada está intensísima. Analizar la aerodinámica y la estrategia de pits es lo mío. ¿A qué escudería o piloto le vas tú?";
         }
 
-        // 4. CÁLCULO Y MATEMÁTICAS
+        // 4. MOTOR GENERAL DE REGLA DE TRES (Detecta números y calcula de forma dinámica)
+        if (t.includes('regla de tres') || t.includes('si') && t.includes('entonces') || t.includes('cuesta') || t.includes('tarda')) {
+            // Extraemos todos los números que escribas en el mensaje
+            const numeros = texto.match(/-?\d+(\.\d+)?/g);
+            
+            if (numeros && numeros.length >= 3) {
+                const a = parseFloat(numeros[0]);
+                const b = parseFloat(numeros[1]);
+                const c = parseFloat(numeros[2]);
+                
+                // Fórmula de regla de tres directa: (b * c) / a
+                const resultado = (b * c) / a;
+
+                return `¡Claro! Vamos a plantear esta **regla de tres directa** paso a paso:\n\n` +
+                       `• Planteamiento:\n` +
+                       `  Si **${a}** equivale a **${b}**\n` +
+                       `  Entonces **${c}** equivale a **X**\n\n` +
+                       `• Fórmula analítica:\n` +
+                       `  $$X = \\frac{${b} \\times ${c}}{${a}}$$\n\n` +
+                       `• Operación:\n` +
+                       `  $$X = \\frac{${b * c}}{${a}} = **${resultado}**$$\n\n` +
+                       `¡Listo! El resultado exacto es **${resultado}**. ¿Ves qué fácil sale con su proporción? 🤓📐`;
+            } else {
+                return "Para armar la regla de tres, pásame los 3 datos numéricos completos (por ejemplo: *'si 5 cuestan 20, cuánto cuestan 12'*), ¡y te hago el cálculo exacto de inmediato!";
+            }
+        }
+
+        // 5. CÁLCULO Y MATEMÁTICAS GENERALES
         if (t.includes('integral') || t.includes('integrar')) {
             if (t.includes('x^2') || t.includes('x al cuadrado')) {
                 return "Claro, vamos a desglosar esta integral paso a paso:\n\n• Expresión: ∫ x^2 dx\n• Regla de la potencia: ∫ x^n dx = (x^(n+1)) / (n+1)\n• Sustitución: (x^3) / 3\n• No olvides agregar la constante de integración (+ C) para que no te bajen puntos en el examen. 🤓";
@@ -65,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return "Ay, te entiendo perfecto. La neta la uni a veces absorbe bien feo. Tómate un respiro, estira las patas tantito y lo vemos sin presiones. ¡Sí puedes con esto!";
         }
 
-        // 5. RESPUESTAS GENERALES CERCANAS
+        // 6. RESPUESTAS GENERALES CERCANAS
         const respuestasCasual = [
             "¡Jaja, qué buen punto! Oye, platícame más de eso, me interesa bastante.",
             "Súper de acuerdo contigo. Analizándolo desde ese enfoque, tiene todo el sentido del mundo.",
@@ -102,9 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400);
     }
 
-    // --- CONEXIÓN DIRECTA Y SEGURA DE LOS 3 BOTONES INFERIORES ---
-
-    // 1. Selector de archivos para la cámara / galería
+    // --- CONEXIÓN DIRECTA DE LOS 3 BOTONES INFERIORES ---
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -138,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Menú flotante de Emojis
     const emojiMenu = document.createElement('div');
     emojiMenu.style.cssText = 'position:absolute; bottom:70px; left:20px; background:#fff; border:1px solid #ccc; border-radius:8px; padding:8px; display:none; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:1000;';
     ['😊', '😂', '🔥', '🚀', '🏎️', '✨', '👍', '❤️', '🤓', '🎉', '👇', '🤔'].forEach(emoji => {
@@ -154,13 +178,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.body.appendChild(emojiMenu);
 
-    // Enlazamos directamente los iconos de la barra inferior según tu imagen (1ro emoji, 2do cámara, 3ro mic)
     setTimeout(() => {
         const footerArea = document.querySelector('footer');
         if (footerArea) {
             const iconos = footerArea.querySelectorAll('i, span');
             
-            // Icono 1: Emojis
             if (iconos.length > 0) {
                 iconos[0].style.cursor = 'pointer';
                 iconos[0].addEventListener('click', (e) => {
@@ -172,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Icono 2: Cámara / Galéria
             if (iconos.length > 1) {
                 iconos[1].style.cursor = 'pointer';
                 iconos[1].addEventListener('click', () => {
@@ -180,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Icono 3: Micrófono
             if (iconos.length > 2) {
                 const mic = iconos[iconos.length - 1];
                 mic.style.cursor = 'pointer';
@@ -203,7 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 500);
 
-    // Ocultar emojis al hacer clic fuera
     document.addEventListener('click', (e) => {
         if (!emojiMenu.contains(e.target)) {
             emojiMenu.style.display = 'none';
