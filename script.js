@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('sendButton');
 
     let historialChat = [
-        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada y cercana. Te encanta la F1, los memes y platicar de todo. Y cuando te piden matemáticas, cálculo, física o reglas de tres (por número o por palabra), te pones pilas y desglosas la solución paso a paso." },
+        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada y cercana. Te encanta la F1, los memes y platicar de todo. Y cuando te piden matemáticas, cálculo, física o reglas de tres, te pones pilas y desglosas la solución paso a paso." },
         { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨" }
     ];
 
@@ -40,9 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return "¡Uff, amo la F1! 🏎️ La temporada está intensísima. Analizar la aerodinámica y la estrategia de pits es lo mío. ¿A qué escudería o piloto le vas tú?";
         }
 
-        // 4. MOTOR DUAL DE REGLA DE TRES (Funciona tanto por palabra/problema como por números directos)
+        // 4. MOTOR DUAL DE REGLA DE TRES
         if (numeros && numeros.length >= 3) {
-            // Si incluye palabras de problema redactado O palabras clave como "regla", "tres", "con"
             if (t.includes('si') || t.includes('cuántos') || t.includes('cuanto') || t.includes('recorre') || t.includes('cuesta') || t.includes('tarda') || t.includes('regla') || t.includes('con') || t.includes('para')) {
                 const a = parseFloat(numeros[0]);
                 const b = parseFloat(numeros[1]);
@@ -125,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400);
     }
 
-    // --- CONEXIÓN DIRECTA DE LOS 3 BOTONES INFERIORES ---
+    // --- CONEXIÓN ROBUSTA DE LOS 3 BOTONES INFERIORES ---
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -149,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 setTimeout(() => {
                     const divAI = document.createElement('div');
-                    divAI.className.print = '';
                     divAI.className = 'message model';
                     divAI.textContent = "¡Qué fotaza! 📸 Me encantó. Oye, platícame de qué es o qué onda.";
                     chatMessages.appendChild(divAI);
@@ -175,12 +173,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.body.appendChild(emojiMenu);
 
+    // Buscamos de manera flexible cualquier contenedor inferior o barra de chat
     setTimeout(() => {
-        const footerArea = document.querySelector('footer');
-        if (footerArea) {
-            const iconos = footerArea.querySelectorAll('i, span');
+        const barraInferior = document.querySelector('footer') || document.querySelector('.chat-footer') || document.querySelector('.input-container') || document.querySelector('div[style*="position: fixed"]') || userInput.parentElement;
+        
+        if (barraInferior) {
+            const iconos = barraInferior.querySelectorAll('i, span, button');
             
-            if (iconos.length > 0) {
+            if (iconos.length >= 1) {
+                // Primer botón: Emojis
                 iconos[0].style.cursor = 'pointer';
                 iconos[0].addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -191,14 +192,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            if (iconos.length > 1) {
+            if (iconos.length >= 2) {
+                // Segundo botón: Cámara / Galería
                 iconos[1].style.cursor = 'pointer';
                 iconos[1].addEventListener('click', () => {
                     fileInput.click();
                 });
             }
 
-            if (iconos.length > 2) {
+            if (iconos.length >= 3) {
+                // Último botón: Micrófono
                 const mic = iconos[iconos.length - 1];
                 mic.style.cursor = 'pointer';
                 mic.addEventListener('click', () => {
@@ -218,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         }
-    }, 500);
+    }, 600);
 
     document.addEventListener('click', (e) => {
         if (!emojiMenu.contains(e.target)) {
