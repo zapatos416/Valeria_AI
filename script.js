@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🔑 TU API KEY DE GROQ
     const GROQ_API_KEY = "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";
 
-    // Historial limpio
     let historialChat = [
         {
             role: "system",
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    // Función principal para enviar mensaje
     async function enviarMensaje() {
         const texto = userInput.value.trim();
         if (!texto) return;
@@ -35,10 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
         historialChat.push({ role: "user", content: texto });
 
         try {
+            // Usamos la ruta oficial completa y aseguramos los headers limpios
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${GROQ_API_KEY}`,
+                    "Authorization": `Bearer ${GROQ_API_KEY.trim()}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
@@ -49,6 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
             mostrarEscribiendo(false);
 
@@ -57,14 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 agregarMensajeAlDOM(respuestaIA, 'model');
                 historialChat.push({ role: "assistant", content: respuestaIA });
             } else {
-                console.error("Error de API:", data);
-                throw new Error("Respuesta inválida de la API");
+                throw new Error("Estructura de respuesta inválida");
             }
 
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Detalle del error:", error);
             mostrarEscribiendo(false);
-            agregarMensajeAlDOM("Ups, ocurrió un pequeño error de conexión con el servidor. Inténtalo de nuevo.", 'model');
+            agregarMensajeAlDOM("Ups, hubo un problema al conectar con el servidor. Revisa la consola para más detalles.", 'model');
         }
     }
 
