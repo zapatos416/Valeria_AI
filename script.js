@@ -24,7 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
         historial.push({ role: "user", content: texto });
 
         try {
-            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            // Usamos un servicio proxy ligero compatible con Vercel para esquivar el CORS del navegador
+            const targetUrl = "https://api.groq.com/openai/v1/chat/completions";
+            const proxyUrl = "https://corsproxy.io/?";
+
+            const res = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${GROQ_API_KEY}`,
