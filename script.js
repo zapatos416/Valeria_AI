@@ -4,14 +4,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('sendButton');
 
     let historial = [
-        { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Cómo va tu día? Cuéntame qué has hecho, de qué memes nos reímos o qué problema pesado de la uni resolvemos hoy. ¡Lo armamos todo! 🚀" }
+        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp. Y cuando te piden matemáticas, cálculo o física, te pones pilas y ayudas a resolverlo paso a paso." },
+        { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Cómo va tu día? Cuéntame qué has hecho o qué resolvemos hoy. ✨" }
     ];
+
+    function procesarCerebroLocal(texto) {
+        const t = texto.toLowerCase();
+
+        // 1. FÓRMULA 1 Y TEMAS COTIDIANOS
+        if (t.includes('f1') || t.includes('formula 1') || t.includes('checo') || t.includes('verstappen') || t.includes('hamilton')) {
+            return "¡Uff, me encanta la F1! 🏎️ La temporada está intensísima. Analizar la aerodinámica y la estrategia de pits es lo mío. ¿A qué escudería o piloto le vas tú?";
+        }
+
+        if (t.includes('edad') || t.includes('cuantos años') || t.includes('años tienes')) {
+            return "Tengo 18 años, acabo de cumplirlos hace poquito. 🎂 Por eso ando entre las clases de la uni y sobreviviendo a los semestres, jaja. ¿Y tú qué cuentas?";
+        }
+
+        // 2. CÁLCULO Y MATEMÁTICAS
+        if (t.includes('integral') || t.includes('integrar')) {
+            if (t.includes('x^2') || t.includes('x al cuadrado')) {
+                return "Claro, vamos a desglosar esta integral paso a paso:\n\n• Expresión: ∫ x^2 dx\n• Regla de la potencia: ∫ x^n dx = (x^(n+1)) / (n+1)\n• Sustitución: (x^3) / 3\n• No olvides agregar la constante de integración (+ C) para que no te bajen puntos en el examen. 🤓";
+            }
+            return "Orales con esa integral. Pásame la función completa y la desglosamos aquí en un dos por tres.";
+        }
+
+        if (t.includes('derivada') || t.includes('derivar')) {
+            return "Las derivadas representan la razón de cambio instantáneo y la pendiente de la curva. Pásame la función exacta y la resolvemos término por término.";
+        }
+
+        // 3. ARITMÉTICA Y OPERACIONES
+        if (t.includes('+') || t.includes('-') || t.includes('*') || t.includes('/') || t.includes('cuanto es')) {
+            try {
+                const limpia = texto.replace(/[^0-9+\-*/().]/g, '');
+                if (limpia.length > 0) {
+                    const res = eval(limpia);
+                    return `El resultado exacto es **${res}**. ¿Ves que sí estaba fácil? 🤭`;
+                }
+            } catch (e) { }
+        }
+
+        // 4. APOYO EMOCIONAL Y ESTRÉS
+        if (t.includes('estres') || t.includes('cansado') || t.includes('dificil') || t.includes('examen') || t.includes('no entiendo')) {
+            return "Ay, te entiendo perfecto. La neta la uni a veces absorbe bien feo. Tómate un respiro, estira las patas tantito y lo vemos sin presiones. ¡Sí puedes con esto!";
+        }
+
+        // 5. PLÁTICA HUMANA Y GENERAL
+        const casuales = [
+            "¡Jaja, qué buen punto! Oye, platícame más de eso o pásame el planteamiento completo.",
+            "Súper de acuerdo contigo. Analizándolo desde ese enfoque, tiene todo el sentido del mundo.",
+            "¡Ay, me encanta ese tema! Explícame un poquito más a fondo para ver cómo le hacemos.",
+            "Definitivamente. Oye, ¿qué te parece si me pasas los datos exactos y lo armamos?"
+        ];
+        return casuales[Math.floor(Math.random() * casuales.length)];
+    }
 
     async function enviar() {
         const texto = userInput.value.trim();
         if (!texto) return;
 
-        // Mostrar mensaje del usuario
         const divU = document.createElement('div');
         divU.className = 'message user';
         divU.textContent = texto;
@@ -21,43 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
         userInput.value = '';
         historial.push({ role: "user", content: texto });
 
-        try {
-            // Llamada segura a nuestra propia función de servidor en Vercel (/api/chat)
-            const res = await fetch('/api/chat', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ messages: historial })
-            });
+        setTimeout(() => {
+            const respuestaLocal = procesarCerebroLocal(texto);
 
-            const data = await res.json();
-
-            if (res.ok && data.choices && data.choices.length > 0) {
-                const respuesta = data.choices[0].message.content;
-                
-                const divAI = document.createElement('div');
-                divAI.className = 'message model';
-                divAI.style.whiteSpace = "pre-line";
-                divAI.textContent = respuesta;
-                chatMessages.appendChild(divAI);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
-                historial.push({ role: "assistant", content: respuesta });
-            } else {
-                throw new Error(data.error || "Error al procesar la respuesta");
-            }
-
-        } catch (err) {
-            console.error("Fallo:", err);
-            
-            // Fallback humano por si hay intermitencia de red
             const divAI = document.createElement('div');
             divAI.className = 'message model';
-            divAI.textContent = "¡Ay, perdona! Se me trabó un segundito el servidor por acá, pero ya volví. ¿En qué nos habíamos quedado?";
+            divAI.style.whiteSpace = "pre-line";
+            divAI.textContent = respuestaLocal;
             chatMessages.appendChild(divAI);
             chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+
+            historial.push({ role: "assistant", content: respuestaLocal });
+        }, 600);
     }
 
     if (sendButton) sendButton.addEventListener('click', enviar);
