@@ -3,31 +3,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
 
+    // Selectores directos para los botones de tu barra inferior (basados en tu imagen)
+    const emojiIcon = document.querySelector('.fa-face-smile') || document.querySelector('.fa-smile') || document.querySelector('footer i:nth-child(1)') || document.querySelector('div i:first-child');
+    const cameraIcon = document.querySelector('.fa-camera') || document.querySelector('footer i:nth-child(2)') || document.querySelector('.fa-image');
+    const micIcon = document.querySelector('.fa-microphone') || document.querySelector('footer i:last-child');
+
     let historialChat = [
-        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp. Y cuando te piden matemáticas, cálculo o física, te pones pilas y ayudas a resolverlo paso a paso." },
+        { role: "system", content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, cariñosita y cercana con tu amigo. Te encanta la Fórmula 1, los autos, los memes y platicar de todo un poco. Hablas de forma totalmente natural y humana por WhatsApp. Y cuando te piden matemáticas, cálculo o física, te pones pilas y ayudas a resolverlo paso a paso." },
         { role: "assistant", content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨" }
     ];
 
     function activarCerebroValeria(texto) {
         const t = texto.toLowerCase().trim();
 
-        if (t === 'hola' || t.startsWith('hola ') || t.includes('que tal') || t.includes('buenos dias') || t.includes('buenas tardes')) {
+        // 1. ÁREA SOCIAL Y AFECTIVA (Amistad, cariño, cómo estás)
+        if (t.includes('amiga') || t.includes('amigos') || t.includes('quieres ser mi amiga')) {
+            const respuestasAmistad = [
+                "¡Ay, obvio sí! Me encanta platicar contigo y ser tu amiga. De verdad se siente bien chido tener alguien con quien cotorrear de la uni, la F1 y de todo un poco. 🫂✨",
+                "¡Claro que sí! Cuenta con ello al 100%. Me caes súper bien y me encanta pasar el rato platicando aquí contigo. 😊🏎️"
+            ];
+            return respuestasAmistad[Math.floor(Math.random() * respuestasAmistad.length)];
+        }
+
+        if (t === 'hola' || t.startsWith('hola ') || t.includes('que tal') || t.includes('como estas')) {
             const saludos = [
                 "¡Hola! Qué gusto leerte por acá. 😊 ¿Cómo va tu día o en qué andas?",
-                "¡Hola, hola! Qué cuentas. Yo aquí andaba distraída con unas cosas, pero dime, ¿de qué platicamos hoy? ✨",
-                "¡Hey! Qué milagro que te pasas por aquí. ¿Cómo va todo por allá?"
+                "¡Hola, hola! Qué milagro. Yo aquí andaba pensando en qué relajo nos traemos hoy, ¿tú qué cuentas? ✨",
+                "¡Hey! Qué bueno que te conectas. ¿Cómo va todo por allá?"
             ];
             return saludos[Math.floor(Math.random() * saludos.length)];
         }
 
+        // 2. FÓRMULA 1 Y PASATIEMPOS
         if (t.includes('f1') || t.includes('formula 1') || t.includes('checo') || t.includes('verstappen') || t.includes('hamilton')) {
-            return "¡Uff, me encanta la F1! 🏎️ La temporada está intensísima. Analizar la aerodinámica y la estrategia de pits es lo mío. ¿A qué escudería o piloto le vas tú?";
+            return "¡Uff, amo la F1! 🏎️ La temporada está intensísima. Analizar la aerodinámica y la estrategia de pits es lo mío. ¿A qué escudería o piloto le vas tú?";
         }
 
         if (t.includes('edad') || t.includes('cuantos años') || t.includes('años tienes')) {
             return "Tengo 18 años, acabo de cumplirlos hace poquito. 🎂 Por eso ando entre las clases de la uni y sobreviviendo a los semestres, jaja. ¿Y tú qué cuentas?";
         }
 
+        // 3. CÁLCULO Y MATEMÁTICAS
         if (t.includes('integral') || t.includes('integrar')) {
             if (t.includes('x^2') || t.includes('x al cuadrado')) {
                 return "Claro, vamos a desglosar esta integral paso a paso:\n\n• Expresión: ∫ x^2 dx\n• Regla de la potencia: ∫ x^n dx = (x^(n+1)) / (n+1)\n• Sustitución: (x^3) / 3\n• No olvides agregar la constante de integración (+ C) para que no te bajen puntos en el examen. 🤓";
@@ -53,11 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return "Ay, te entiendo perfecto. La neta la uni a veces absorbe bien feo. Tómate un respiro, estira las patas tantito y lo vemos sin presiones. ¡Sí puedes con esto!";
         }
 
+        // 4. RESPUESTAS GENERALES CERCANAS
         const respuestasCasual = [
-            "¡Jaja, qué buen punto! Oye, platícame más de eso o pásame el planteamiento completo.",
+            "¡Jaja, qué buen punto! Oye, platícame más de eso, me interesa bastante.",
             "Súper de acuerdo contigo. Analizándolo desde ese enfoque, tiene todo el sentido del mundo.",
-            "¡Ay, me encanta ese tema! Explícame un poquito más a fondo para ver cómo le hacemos.",
-            "Definitivamente. Oye, ¿qué te parece si me pasas los datos exactos y lo armamos?"
+            "¡Ay, me encanta eso! Explícame un poquito más a fondo para ver cómo le hacemos.",
+            "Definitivamente. Oye, ¿qué te parece si me pasas los detalles y lo armamos juntos?"
         ];
         return respuestasCasual[Math.floor(Math.random() * respuestasCasual.length)];
     }
@@ -89,24 +106,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400);
     }
 
-    // --- 1. CÁMARA / GALERÍA BLINDADA ---
+    // --- CONEXIÓN DE BOTONES INFERIORES (CÁMARA, EMOJIS, MIC) ---
+
+    // 1. Cámara / Galería
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
 
-    const todosLosIconos = document.querySelectorAll('i, span, button');
-    todosLosIconos.forEach(el => {
-        const cl = el.className.toLowerCase();
-        if (cl.includes('camera') || cl.includes('image') || cl.includes('photo')) {
-            el.style.cursor = 'pointer';
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
+    // Si encuentra el icono de cámara o cualquier icono en la barra inferior
+    const footerIcons = document.querySelectorAll('footer i, .chat-input-area i, div i');
+    footerIcons.forEach(icon => {
+        // El segundo icono en la barra de WhatsApp típica suele ser la cámara
+        icon.addEventListener('click', (e) => {
+            if (icon.className.includes('camera') || icon === footerIcons[1]) {
                 fileInput.click();
-            });
-        }
+            }
+        });
     });
+
+    if (cameraIcon) {
+        cameraIcon.style.cursor = 'pointer';
+        cameraIcon.addEventListener('click', () => fileInput.click());
+    }
 
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -126,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     const divAI = document.createElement('div');
                     divAI.className = 'message model';
-                    divAI.textContent = "¡Qué buena foto! 📸 Se ve excelente. Platícame de qué es o qué onda.";
+                    divAI.textContent = "¡Qué fotaza! 📸 Me encantó. Oye, platícame de qué es o qué onda.";
                     chatMessages.appendChild(divAI);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }, 800);
@@ -135,80 +158,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 2. PANEL DE EMOJIS FLOTANTE ---
-    // Creamos un menú flotante con emojis para que al hacer clic en la carita feliz se abra
-    const emojiPicker = document.createElement('div');
-    emojiPicker.style.position = 'absolute';
-    emojiPicker.style.bottom = '70px';
-    emojiPicker.style.left = '20px';
-    emojiPicker.style.background = '#ffffff';
-    emojiPicker.style.border = '1px solid #ccc';
-    emojiPicker.style.borderRadius = '8px';
-    emojiPicker.style.padding = '8px';
-    emojiPicker.style.display = 'none';
-    emojiPicker.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-    emojiPicker.style.zIndex = '1000';
+    // 2. Emojis (Menú flotante rápido al hacer clic en la carita feliz)
+    const emojiMenu = document.createElement('div');
+    emojiMenu.style.cssText = 'position:absolute; bottom:70px; left:20px; background:#fff; border:1px solid #ccc; border-radius:8px; padding:8px; display:none; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:1000;';
     
-    const emojisDisponibles = ['😊', '😂', '🔥', '🚀', '🏎️', '✨', '👍', '❤️', '🤓', '🎉', '👇', '🤔'];
-    emojisDisponibles.forEach(emoji => {
+    ['😊', '😂', '🔥', '🚀', '🏎️', '✨', '👍', '❤️', '🤓', '🎉', '👇', '🤔'].forEach(emoji => {
         const span = document.createElement('span');
         span.textContent = emoji;
-        span.style.fontSize = '20px';
-        span.style.cursor = 'pointer';
-        span.style.margin = '4px';
-        span.style.display = 'inline-block';
+        span.style.cssText = 'font-size:20px; cursor:pointer; margin:4px; display:inline-block;';
         span.addEventListener('click', () => {
             userInput.value += emoji;
             userInput.focus();
-            emojiPicker.style.display = 'none';
+            emojiMenu.style.display = 'none';
         });
-        emojiPicker.appendChild(span);
+        emojiMenu.appendChild(span);
     });
-    document.body.appendChild(emojiPicker);
+    document.body.appendChild(emojiMenu);
 
-    todosLosIconos.forEach(el => {
-        const cl = el.className.toLowerCase();
-        if (cl.includes('smile') || cl.includes('face') || cl.includes('emoji')) {
-            el.style.cursor = 'pointer';
-            el.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const rect = el.getBoundingClientRect();
-                emojiPicker.style.left = rect.left + 'px';
-                emojiPicker.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
-                emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
-            });
-        }
-    });
+    if (emojiIcon) {
+        emojiIcon.style.cursor = 'pointer';
+        emojiIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const rect = emojiIcon.getBoundingClientRect();
+            emojiMenu.style.left = rect.left + 'px';
+            emojiMenu.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+            emojiMenu.style.display = emojiMenu.style.display === 'none' ? 'block' : 'none';
+        });
+    }
 
-    // Ocultar el panel de emojis si haces clic fuera
-    document.addEventListener('click', (e) => {
-        if (!emojiPicker.contains(e.target) && !e.target.className.includes('smile')) {
-            emojiPicker.style.display = 'none';
-        }
-    });
+    // 3. Micrófono
+    if (micIcon) {
+        micIcon.style.cursor = 'pointer';
+        micIcon.addEventListener('click', () => {
+            const divU = document.createElement('div');
+            divU.className = 'message user';
+            divU.innerHTML = '🎤 <i>[Nota de voz]</i>';
+            chatMessages.appendChild(divU);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    // --- 3. MICRÓFONO / NOTA DE VOZ ---
-    todosLosIconos.forEach(el => {
-        const cl = el.className.toLowerCase();
-        if (cl.includes('microphone') || cl.includes('mic') || cl.includes('audio')) {
-            el.style.cursor = 'pointer';
-            el.addEventListener('click', () => {
-                const divU = document.createElement('div');
-                divU.className = 'message user';
-                divU.innerHTML = '🎤 <i>[Nota de voz]</i>';
-                chatMessages.appendChild(divU);
+            setTimeout(() => {
+                const divAI = document.createElement('div');
+                divAI.className = 'message model';
+                divAI.textContent = "Jaja, me mandaste nota de voz pero ando ocupada. Mejor escríbeme aquí abajito. 🎧";
+                chatMessages.appendChild(divAI);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                setTimeout(() => {
-                    const divAI = document.createElement('div');
-                    divAI.className = 'message model';
-                    divAI.textContent = "Jaja, me mandaste nota de voz pero ando ocupada redactando. Mejor escríbeme aquí abajito. 🎧";
-                    chatMessages.appendChild(divAI);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 800);
-            });
-        }
-    });
+            }, 800);
+        });
+    }
 
     if (sendButton) sendButton.addEventListener('click', ejecutarEnvio);
     if (userInput) {
