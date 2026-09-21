@@ -3,23 +3,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
 
-    // Tu API Key integrada para que el cerebro de Valeria sea 100% real y dinámico
+    // Tu API Key integrada para el cerebro real de Valeria
     const API_KEY = "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";
     
-    // Historial con la directiva de sistema de Valeria
     let historialChat = [
         { 
             role: "system", 
-            content: "Eres Valeria, una estudiante universitaria de 18 años brillante, empática y multidisciplinaria. Dominas programación, psicología, pedagogía, matemáticas, física, memes y la F1. Hablas de forma totalmente natural, cálida y humana (como por WhatsApp), usando emojis orgánicamente y respondiendo con total libertad a cualquier cosa que te pregunten." 
+            content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, empática y platicadora. Te encanta hablar de la uni, programación, psicología, pedagogía, memes, F1 y de cualquier tema cotidiano. NUNCA suenes como un bot robótico ni repites frases programadas; responde siempre de forma completamente natural, variada, cálida y cercana, tal como lo harías chateando con un amigo por WhatsApp, usando emojis de forma orgánica." 
+        },
+        {
+            role: "assistant",
+            content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨"
         }
     ];
 
     async function consultarCerebroReal(textoUsuario) {
-        // Añadimos el mensaje del usuario al historial
         historialChat.push({ role: "user", content: textoUsuario });
 
         try {
-            // Usamos la API compatible de Groq/LLM para máxima velocidad y naturalidad
             const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -27,9 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     "Authorization": `Bearer ${API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: "llama-3.3-70b-versatile", // Un modelo sumamente inteligente, fluido y en español perfecto
+                    model: "llama-3.3-70b-versatile",
                     messages: historialChat,
-                    temperature: 0.85,
+                    temperature: 0.9,
                     max_tokens: 1024
                 })
             });
@@ -38,16 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (data.choices && data.choices.length > 0) {
                 const respuestaIA = data.choices[0].message.content;
-                // Guardamos la respuesta en el historial para que mantenga la memoria de la charla
                 historialChat.push({ role: "assistant", content: respuestaIA });
                 return respuestaIA;
             } else {
                 console.error("Error en la respuesta de la API:", data);
-                return "Ay, me confundí un tantito con la red. ¿Me repites lo que dijiste? 😅";
+                return "Ay, me distraje un segundo con el teléfono. ¿Qué me decías? 😅";
             }
         } catch (error) {
             console.error("Error de conexión:", error);
-            return "Tuve un pequeño problema de conexión con mi servidor mental. Inténtame mandar el mensaje otra vez. 🌐";
+            return "Uy, como que falló tantito mi internet. Inténtame mandar el mensaje otra vez. 🌐";
         }
     }
 
@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const texto = userInput.value.trim();
         if (!texto) return;
 
-        // Mostrar mensaje del usuario en pantalla
         const divU = document.createElement('div');
         divU.className = 'message user';
         divU.textContent = texto;
@@ -64,17 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         userInput.value = '';
 
-        // Indicador de que Valeria está pensando
         const divAI = document.createElement('div');
         divAI.className = 'message model';
         divAI.textContent = "Valeria está escribiendo...";
         chatMessages.appendChild(divAI);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Llamada al cerebro real de la IA
         const respuestaFinal = await consultarCerebroReal(texto);
 
-        // Reemplazar el texto de carga con la respuesta real de la IA
         divAI.textContent = respuestaFinal;
         divAI.style.whiteSpace = "pre-line";
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -105,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     const divAI = document.createElement('div');
                     divAI.className = 'message model';
-                    divAI.textContent = "¡Qué fotaza! 📸 Me encantó. Cuéntame los detalles de qué es o de dónde la sacaste.";
+                    divAI.textContent = "¡Qué fotaza! 📸 Me encantó. Oye, platícame de qué es o qué onda.";
                     chatMessages.appendChild(divAI);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }, 800);
@@ -166,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         const divAI = document.createElement('div');
                         divAI.className = 'message model';
-                        divAI.textContent = "Me llegó tu nota de voz, ¡pero ando analizando unos códigos y memes! Mejor escríbeme aquí abajito y lo platicamos a fondo. 🎧✨";
+                        divAI.textContent = "Me mandaste nota de voz pero ando ocupada con unos apuntes. Mejor escríbeme aquí abajito. 🎧✨";
                         chatMessages.appendChild(divAI);
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }, 800);
