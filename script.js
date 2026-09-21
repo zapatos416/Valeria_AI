@@ -3,13 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
 
-    // Colocamos tu llave directamente aquí para evitar bloqueos de entorno por ahora
-    const API_KEY = "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";
+    // Tu nueva API Key de Groq funcionando al 100%
+    const API_KEY = "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";
     
     let historialChat = [
         { 
             role: "system", 
-            content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, empática y platicadora. Te encanta hablar de la uni, programación, psicología, pedagogía, memes, F1 y de cualquier tema cotidiano. Responde siempre de forma completamente natural, cálida y cercana, usando emojis de forma orgánica." 
+            content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, empática y platicadora. Te encanta hablar de la uni, programación, psicología, pedagogía, memes, F1 y de cualquier tema cotidiano. Responde siempre de forma completamente natural, cálida y cercana, usando emojis de forma orgánica y sin sonar como un robot." 
         }
     ];
 
@@ -39,11 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return respuestaIA;
             } else {
                 console.error("Detalle del error de API:", data);
-                return `Error de la API: ${data.error?.message || 'Respuesta inválida'}`;
+                return "Ay, me distraje un segundo con el teléfono. ¿Qué me decías? 😅";
             }
         } catch (error) {
             console.error("Error de red:", error);
-            return "Error de red al conectar con Groq. Revisa la consola (F12).";
+            return "Uy, como que falló tantito mi internet. Inténtame mandar el mensaje otra vez. 🌐";
         }
     }
 
