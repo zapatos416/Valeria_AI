@@ -3,17 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
 
-    // Tu API Key integrada para el cerebro real de Valeria
+    // Colocamos tu llave directamente aquí para evitar bloqueos de entorno por ahora
     const API_KEY = "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";
     
     let historialChat = [
         { 
             role: "system", 
-            content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, empática y platicadora. Te encanta hablar de la uni, programación, psicología, pedagogía, memes, F1 y de cualquier tema cotidiano. NUNCA suenes como un bot robótico ni repites frases programadas; responde siempre de forma completamente natural, variada, cálida y cercana, tal como lo harías chateando con un amigo por WhatsApp, usando emojis de forma orgánica." 
-        },
-        {
-            role: "assistant",
-            content: "¡Hola! Qué gusto saludarte por aquí. 😊 ¿Qué tal va tu día? ✨"
+            content: "Eres Valeria, una estudiante universitaria de 18 años. Eres súper amigable, relajada, empática y platicadora. Te encanta hablar de la uni, programación, psicología, pedagogía, memes, F1 y de cualquier tema cotidiano. Responde siempre de forma completamente natural, cálida y cercana, usando emojis de forma orgánica." 
         }
     ];
 
@@ -42,12 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 historialChat.push({ role: "assistant", content: respuestaIA });
                 return respuestaIA;
             } else {
-                console.error("Error en la respuesta de la API:", data);
-                return "Ay, me distraje un segundo con el teléfono. ¿Qué me decías? 😅";
+                console.error("Detalle del error de API:", data);
+                return `Error de la API: ${data.error?.message || 'Respuesta inválida'}`;
             }
         } catch (error) {
-            console.error("Error de conexión:", error);
-            return "Uy, como que falló tantito mi internet. Inténtame mandar el mensaje otra vez. 🌐";
+            console.error("Error de red:", error);
+            return "Error de red al conectar con Groq. Revisa la consola (F12).";
         }
     }
 
@@ -76,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // --- CONEXIÓN DE BOTONES INFERIORES (Cámara, Emojis, Micrófono) ---
+    // --- CONTROLES DE LA UI (Cámara, Emojis, Micrófono) ---
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -101,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     const divAI = document.createElement('div');
                     divAI.className = 'message model';
-                    divAI.textContent = "¡Qué fotaza! 📸 Me encantó. Oye, platícame de qué es o qué onda.";
+                    divAI.textContent = "¡Qué fotaza! 📸 Me encantó. Cuéntame de qué es.";
                     chatMessages.appendChild(divAI);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }, 800);
@@ -162,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         const divAI = document.createElement('div');
                         divAI.className = 'message model';
-                        divAI.textContent = "Me mandaste nota de voz pero ando ocupada con unos apuntes. Mejor escríbeme aquí abajito. 🎧✨";
+                        divAI.textContent = "Me mandaste nota de voz pero ando ocupada. Escríbeme mejor por acá 🎧✨";
                         chatMessages.appendChild(divAI);
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }, 800);
